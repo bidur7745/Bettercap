@@ -22,13 +22,12 @@ app.use("/uploads", express.static(path.join(process.cwd(), "uploads")));
 app.get("/", (req, res) => {
   res.send("Server is running");
 });
-
 io.on("connection", (socket) => {
   console.log("user connected");
 
-  socket.on("join", (room) => socket.join(room));
-  socket.on("message", (msg) => {
-    io.to(msg.room).emit("message", msg);
+  // Align event name with frontend: broadcast chat messages to all clients
+  socket.on("chatMessage", (msg) => {
+    io.emit("chatMessage", msg);
   });
 
   socket.on("disconnect", () => console.log("user disconnected"));
